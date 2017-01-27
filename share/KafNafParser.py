@@ -66,7 +66,10 @@ for root,dirs,files in os.walk("./"): #walk through the working directory and lo
                     for target in targets: #iterate through all targets in the references element for the entity node
                         tid = int(my_parser.get_term(target.attrib["id"]).get_node().find("span").find("target").attrib["id"][1:]) #get the token id for the target
                         for x in range(tid-15,tid+15): #iterate through the tokens 15 before and 15 after the target
-                            token = my_parser.get_token("w"+str(x)).get_text()
+                            if my_parser.get_token("w"+str(x)):
+                                token = my_parser.get_token("w"+str(x)).get_text()
+                            else:
+                                token = ""
                             if x == tid:
                                 token = token.upper() #make all but the target lower case
                             else:
@@ -82,8 +85,7 @@ for root,dirs,files in os.walk("./"): #walk through the working directory and lo
             print "Saved: ", filename
 
 
-# In[ ]:
-
+# In[160]:
 
 #print "SIMPLIFIED DICTIONARY"
 #for key,value in sorted(simpledict.items(),key=operator.itemgetter(1)):
