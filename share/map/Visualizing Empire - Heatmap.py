@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[7]:
+# In[1]:
 
 #CHRISTOPHER M. CHURCH
 #ASSISTANT PROFESSOR OF HISTORY
@@ -14,7 +14,6 @@ from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 from matplotlib import cm as cm
 from matplotlib.colors import ListedColormap
-import matplotlib.pylab as pl
 import os
 import unicodecsv
 
@@ -23,6 +22,24 @@ import unicodecsv
 def convert_lon_lat_points_to_meters_using_transform(points, tran):
     # maybe there is a better way to get long/lat into meters but this works ok
     return np.array([tran(long,lat) for long,lat in points])
+
+#make a custom colormap
+def make_colormap(seq):
+    """Return a LinearSegmentedColormap
+    seq: a sequence of floats and RGB-tuples. The floats should be increasing
+    and in the interval (0,1).
+    """
+    seq = [(None,) * 3, 0.0] + list(seq) + [1.0, (None,) * 3]
+    cdict = {'red': [], 'green': [], 'blue': []}
+    for i, item in enumerate(seq):
+        if isinstance(item, float):
+            r1, g1, b1 = seq[i - 1]
+            r2, g2, b2 = seq[i + 1]
+            cdict['red'].append([item, r1, r2])
+            cdict['green'].append([item, g1, g2])
+            cdict['blue'].append([item, b1, b2])
+    return mcolors.LinearSegmentedColormap('CustomMap', cdict)
+
 
 #set working directory
 wd = "I:/Dropbox/NDAD/Visualizing-Empire/OpeNER/test"
@@ -77,7 +94,11 @@ points = convert_lon_lat_points_to_meters_using_transform(points, m.projtran)
 
 #add alpha transparency to color ramp
 # Choose colormap
-cmap = pl.cm.OrRd
+import matplotlib.colors as mcolors
+c = mcolors.ColorConverter().to_rgb
+cmap = make_colormap([c('blue'),c('darkblue')])
+
+#cmap = cm.OrRd
 
 # Get the colormap colors
 my_cmap = cmap(np.arange(cmap.N))
@@ -89,11 +110,21 @@ my_cmap[:,-1] = np.linspace(0, 1, cmap.N)
 my_cmap = ListedColormap(my_cmap)
 
 # make plot using hexbin
-bins = 100
+bins = 200
 CS = m.hexbin(points[:,0],points[:,1],gridsize=bins,cmap=my_cmap)
 #m.colorbar(location="bottom",label="Z") # draw colorbar
 
 plt.title('Places Mentioned in the Journal Day Voyages')
 plt.gcf().set_size_inches(8,5)
 plt.show()
+
+
+# In[ ]:
+
+
+
+
+# In[ ]:
+
+
 
