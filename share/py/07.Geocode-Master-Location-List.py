@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[2]:
+# In[11]:
 
 #CHRISTOPHER CHURCH
 #ASSISTANT PROFESSOR OF HISTORY
@@ -18,46 +18,29 @@ read_dir = "I:/Dropbox/NDAD/Visualizing-Empire/OpeNER/Output/geocode/"
 write_dir = read_dir
 
 
-# In[3]:
+# In[ ]:
 
 filename = "location.masterlist.tsv"
+session = requests.Session() #having a single session should speed up the API requests
 with codecs.open(read_dir+filename,'r',encoding="utf8") as locations:
     print "geocoding " + filename,
     output = codecs.open(write_dir+filename+".geocoded.csv","w",encoding="utf8")
     output.write("LOC,LAT,LON\n")
     for location in locations:
         location = location.rstrip('\n')
-        #g=geocoder.google(row[0])  #google also includes g.city,g.state,g.country,
-        g=geocoder.arcgis(location)
+        #g=geocoder.google(location)  #google also includes g.city,g.state,g.country,
+        #g=geocoder.arcgis(location)
+        g = geocoder.google(location, session=session) #use a session
         if g.latlng:
             lat = g.latlng[0]
             lon = g.latlng[1]
+        else:
+            lat=''
+            lon=''
         l=[unicode(location),lat,lon]
         export_text=",".join(unicode(x) for x in l)+"\n"
         output.write(export_text)
         print l
         #        print ".",
     output.close()
-
-
-# In[4]:
-
-output.close()
-print location
-
-
-# In[10]:
-
-export_text
-
-
-# In[18]:
-
-for location in locations:
-    print location
-
-
-# In[ ]:
-
-
 
