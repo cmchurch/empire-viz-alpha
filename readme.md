@@ -1,8 +1,11 @@
 Christopher M. Church
+
 University of Nevada, Reno
+
 ndad.unr.edu
 
 DESCRIPTION
+
 This is an early alpha test of the Visualizing Empire project. It is available under a 
 Creative Commons ShareAlike, No Commercial Use license.
 
