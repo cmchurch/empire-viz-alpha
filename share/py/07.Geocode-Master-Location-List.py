@@ -14,6 +14,7 @@ import geocoder
 import codecs
 import os
 import unicodecsv
+import requests
 read_dir = "I:/Dropbox/NDAD/Visualizing-Empire/OpeNER/Output/geocode/"
 write_dir = read_dir
 
