@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[11]:
 
 #CHRISTOPHER CHURCH
 #ASSISTANT PROFESSOR OF HISTORY
@@ -18,44 +18,20 @@ import requests
 read_dir = "I:/Dropbox/NDAD/Visualizing-Empire/OpeNER/Output/geocode/"
 write_dir = read_dir
 
-def file_len(fname):
-    with open(fname) as f:
-        for i, l in enumerate(f):
-            pass
-    return i + 1
-
 
 # In[ ]:
 
-import sys
-
-filename = "location.masterlist2.tsv"
+filename = "location.masterlist.tsv"
 session = requests.Session() #having a single session should speed up the API requests
-count=0
-starting_point = 34256
-length = file_len(read_dir+filename)
-
 with codecs.open(read_dir+filename,'r',encoding="utf8") as locations:
-    output = codecs.open(write_dir+filename+".geocoded.csv","a",encoding="utf8")
-    #output.write("LOC,LAT,LON\n") #comment to stop from adding the headers
-    
+    print "geocoding " + filename,
+    output = codecs.open(write_dir+filename+".geocoded.csv","w",encoding="utf8")
+    output.write("LOC,LAT,LON\n")
     for location in locations:
-        count = count+1
-        print "\r","geocoding " + str(count) + " out of " +str(length), #status indicator
-        if count < starting_point: continue #skip to pick up where left off
-        location = location.rstrip('\r\n')
+        location = location.rstrip('\n')
         #g=geocoder.google(location)  #google also includes g.city,g.state,g.country,
-        
-        for attempt in range(10):
-            try:
-                g = geocoder.arcgis(location)
-                break
-            except:
-                continue
-        else:
-            print "Network Connection Timeout - Failed after 10 attempts"
-            sys.exit(1)
-    
+        #g=geocoder.arcgis(location)
+        g = geocoder.google(location, session=session) #use a session
         if g.latlng:
             lat = g.latlng[0]
             lon = g.latlng[1]
@@ -65,16 +41,7 @@ with codecs.open(read_dir+filename,'r',encoding="utf8") as locations:
         l=[unicode(location),lat,lon]
         export_text=",".join(unicode(x) for x in l)+"\n"
         output.write(export_text)
-        #print l
+        print l
+        #        print ".",
     output.close()
-
-
-# In[17]:
-
-output.close()
-
-
-# In[ ]:
-
-
 
