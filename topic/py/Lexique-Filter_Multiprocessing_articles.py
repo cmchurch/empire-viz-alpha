@@ -103,6 +103,8 @@ if __name__ == '__main__':
     from nltk.tokenize import word_tokenize
     from BeautifulSoup import BeautifulSoup as bs
 
+	cores = 6
+	
     for filename in filenames:
         discarded_tokens = []
         corrected=0
@@ -120,7 +122,11 @@ if __name__ == '__main__':
             tokens = word_tokenize(article.text)
             revised_tokens=[]
             print '\r Processing: ' + filename + ", " + str(index) + " out of " + str(article_count) + "(" + str(index/float(article_count)*100)+"%)",
-            revised_tokens = parallel_process(2,tokens)
+            if len(tokens) < cores:
+				chunks = len(tokens)
+			else:
+				chunks = cores
+			revised_tokens = parallel_process(chunks,tokens)
             article = " ".join(revised_tokens)
             article = "<article>"+article+"</article>"
             articles.append(article)
